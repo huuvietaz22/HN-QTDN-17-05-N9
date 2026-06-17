@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class CongViec(models.Model):
@@ -39,6 +43,12 @@ class CongViec(models.Model):
         string="Trạng thái",
         default='moi'
     )
+
+    nhiem_vu_ids = fields.One2many(
+        'nhiem_vu',
+        'cong_viec_id',
+        string='Nhiệm vụ'
+    )
     
     # ============ TÍCH HỢP VỚI MODULE NHÂN SỰ ============
     # Người phụ trách công việc
@@ -70,6 +80,53 @@ class CongViec(models.Model):
         default=0.0,
         help='Tỷ lệ hoàn thành công việc (0-100%)'
     )
+
+    tong_nhiem_vu = fields.Integer(
+        string='Tổng nhiệm vụ',
+        compute='_compute_nhiem_vu_stats',
+        store=True
+    )
+    nhiem_vu_hoan_thanh = fields.Integer(
+        string='Nhiệm vụ hoàn thành',
+        compute='_compute_nhiem_vu_stats',
+        store=True
+    )
+
+    @api.depends('nhiem_vu_ids.trang_thai')
+    def _compute_nhiem_vu_stats(self):
+        for record in self:
+            record.tong_nhiem_vu = len(record.nhiem_vu_ids)
+            record.nhiem_vu_hoan_thanh = len(
+                record.nhiem_vu_ids.filtered(lambda task: task.trang_thai == 'hoan_thanh')
+            )
+
+    @api.constrains('ngay_bat_dau', 'ngay_ket_thuc')
+    def _check_dates(self):
+        for record in self:
+            if record.ngay_bat_dau and record.ngay_ket_thuc and record.ngay_bat_dau > record.ngay_ket_thuc:
+                raise ValidationError('Ngày bắt đầu công việc không được lớn hơn ngày kết thúc.')
+
+    @api.constrains('ti_le_hoan_thanh', 'gio_lam_du_kien', 'gio_lam_thuc_te')
+    def _check_numeric_values(self):
+        for record in self:
+            if record.ti_le_hoan_thanh < 0 or record.ti_le_hoan_thanh > 100:
+                raise ValidationError('Tỷ lệ hoàn thành công việc phải nằm trong khoảng 0-100%.')
+            if record.gio_lam_du_kien < 0 or record.gio_lam_thuc_te < 0:
+                raise ValidationError('Số giờ làm việc không được âm.')
+
+    def _sync_progress_from_nhiem_vu(self):
+        """Đồng bộ tiến độ công việc từ các nhiệm vụ con khi đã có nhiệm vụ."""
+        for record in self:
+            if not record.nhiem_vu_ids:
+                continue
+
+            progress = sum(record.nhiem_vu_ids.mapped('ti_le_hoan_thanh')) / len(record.nhiem_vu_ids)
+            vals = {'ti_le_hoan_thanh': progress}
+            if progress >= 100:
+                vals['trang_thai'] = 'hoan_thanh'
+            elif progress > 0 and record.trang_thai in ('moi', 'hoan_thanh'):
+                vals['trang_thai'] = 'dang_thuc_hien'
+            record.with_context(skip_task_progress_sync=True).write(vals)
 
     @api.model
     def create(self, vals):
@@ -105,7 +162,7 @@ class CongViec(models.Model):
         
         # Trigger AI re-scan cho dự án khi task có thay đổi quan trọng
         important_fields = {'trang_thai', 'ti_le_hoan_thanh', 'ngay_ket_thuc', 'nguoi_phu_trach_id'}
-        if any(field in vals for field in important_fields):
+        if 'du_an_id' in self._fields and any(field in vals for field in important_fields):
             # Lấy danh sách dự án liên quan
             projects = self.mapped('du_an_id').filtered(lambda p: p)
             for project in projects:
@@ -114,8 +171,6 @@ class CongViec(models.Model):
                     project._auto_detect_risks()
                 except Exception as e:
                     # Không để lỗi AI làm gián đoạn việc cập nhật task
-                    import logging
-                    _logger = logging.getLogger(__name__)
                     _logger.warning(f"Không thể chạy AI re-scan cho dự án {project.projects_id}: {str(e)}")
 
         return res

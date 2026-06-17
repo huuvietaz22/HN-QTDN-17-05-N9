@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -10,12 +10,25 @@ class Projects(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     projects_id = fields.Char("Mã dự án", required=True, copy=False, readonly=True, default='New')
-    projects_name = fields.Char("Tên dự án")
+    projects_name = fields.Char("Tên dự án", required=True, tracking=True)
+    description = fields.Text("Mô tả dự án")
     
-    manager_name = fields.Many2one('nhan_vien', string="Quản lý dự án")
+    manager_name = fields.Many2one('nhan_vien', string="Quản lý dự án", tracking=True)
 
     start_date = fields.Date("Ngày bắt đầu")
-    actual_end_date = fields.Date("Ngày kết thúc thực tế")
+    actual_end_date = fields.Date("Ngày kết thúc dự kiến/thực tế")
+    phuong_phap_quan_ly = fields.Selection(
+        selection=[
+            ('waterfall', 'Waterfall'),
+            ('agile', 'Agile'),
+            ('scrum', 'Scrum'),
+            ('kanban', 'Kanban'),
+            ('hybrid', 'Hybrid'),
+        ],
+        string='Phương pháp quản lý',
+        default='agile',
+        tracking=True
+    )
 
     progress = fields.Float(
         "Tiến độ (%)",
@@ -43,6 +56,19 @@ class Projects(models.Model):
         string='Công việc',
         help='Danh sách công việc thuộc dự án này (field du_an_id được thêm bởi module project_management)'
     )
+    milestone_ids = fields.One2many('project.milestone', 'project_id', string='Mốc nghiệm thu')
+    change_request_ids = fields.One2many('project.change.request', 'project_id', string='Yêu cầu thay đổi')
+    meeting_ids = fields.One2many('project.meeting', 'project_id', string='Biên bản họp')
+    milestone_count = fields.Integer(string='Số mốc', compute='_compute_governance_counts')
+    change_request_count = fields.Integer(string='Số yêu cầu thay đổi', compute='_compute_governance_counts')
+    meeting_count = fields.Integer(string='Số cuộc họp', compute='_compute_governance_counts')
+
+    @api.depends('milestone_ids', 'change_request_ids', 'meeting_ids')
+    def _compute_governance_counts(self):
+        for project in self:
+            project.milestone_count = len(project.milestone_ids)
+            project.change_request_count = len(project.change_request_ids)
+            project.meeting_count = len(project.meeting_ids)
 
     # ============ TRƯỜNG XÉT DUYỆT DỰ ÁN ============
     approval_state = fields.Selection([
@@ -57,6 +83,18 @@ class Projects(models.Model):
     approval_signature = fields.Binary(string='Chữ ký phê duyệt')
     rejection_reason = fields.Text(string='Lý do từ chối') 
 
+    @api.constrains('start_date', 'actual_end_date')
+    def _check_dates(self):
+        for record in self:
+            if record.start_date and record.actual_end_date and record.start_date > record.actual_end_date:
+                raise ValidationError('Ngày bắt đầu dự án không được lớn hơn ngày kết thúc.')
+
+    @api.constrains('progress')
+    def _check_progress(self):
+        for record in self:
+            if record.progress < 0 or record.progress > 100:
+                raise ValidationError('Tiến độ dự án phải nằm trong khoảng 0-100%.')
+
     @api.depends('task_ids.trang_thai', 'task_ids.ti_le_hoan_thanh')
     def _compute_progress(self):
         """Tính tiến độ dự án từ công việc (cong_viec)"""
@@ -67,6 +105,12 @@ class Projects(models.Model):
                 project.progress = total_progress / len(project.task_ids)
             else:
                 project.progress = 0.0
+            if project.progress >= 100 and project.status != 'cancelled':
+                project.status = 'completed'
+            elif project.progress > 0 and project.status in (False, 'not_started', 'completed'):
+                project.status = 'in_progress'
+            elif project.progress == 0 and not project.status:
+                project.status = 'not_started'
 
     def _inverse_progress(self):
         """Cho phép người dùng nhập/sửa trực tiếp tiến độ dự án trên form.
@@ -90,6 +134,28 @@ class Projects(models.Model):
         return result
     
     budget_ids = fields.One2many('budgets', inverse_name='projects_id', string="Ngân sách Dự án")
+    tong_chi_phi_nhan_su = fields.Float(
+        string='Tổng chi phí nhân sự',
+        compute='_compute_project_costs',
+        store=True
+    )
+    tong_chi_phi_phat_sinh = fields.Float(
+        string='Tổng chi phí phát sinh',
+        compute='_compute_project_costs',
+        store=True
+    )
+    tong_chi_phi_du_an = fields.Float(
+        string='Tổng chi phí dự án',
+        compute='_compute_project_costs',
+        store=True
+    )
+
+    @api.depends('task_ids.chi_phi_nhan_su_thuc_te', 'budget_ids.budget_spent')
+    def _compute_project_costs(self):
+        for project in self:
+            project.tong_chi_phi_nhan_su = sum(project.task_ids.mapped('chi_phi_nhan_su_thuc_te'))
+            project.tong_chi_phi_phat_sinh = sum(project.budget_ids.mapped('budget_spent'))
+            project.tong_chi_phi_du_an = project.tong_chi_phi_nhan_su + project.tong_chi_phi_phat_sinh
 
     @api.model
     def _get_next_project_code(self):
@@ -131,7 +197,7 @@ class Projects(models.Model):
             sequence = self.env['ir.sequence'].search([('code', '=', 'projects.code')], limit=1)
             if sequence:
                 # Lấy số từ mã vừa tạo (bỏ prefix)
-                used_number = int(next_code.replace(sequence.prefix or 'DA', ''))
+                used_number = int(next_code.replace(sequence.prefix or 'DA', '', 1))
                 # Cập nhật sequence để số tiếp theo là used_number + 1
                 if used_number >= sequence.number_next:
                     sequence.write({'number_next': used_number + 1})
@@ -180,6 +246,8 @@ class Projects(models.Model):
         for record in self:
             if not record.manager_name:
                 raise UserError('Vui lòng chọn Quản lý dự án trước khi gửi xét duyệt!')
+            if not record.projects_name:
+                raise UserError('Vui lòng nhập tên dự án trước khi gửi xét duyệt!')
             record.approval_state = 'pending'
 
     def action_approve(self):
@@ -191,6 +259,7 @@ class Projects(models.Model):
                 'approval_state': 'approved',
                 'approver_id': record.manager_name.id,
                 'approval_date': fields.Datetime.now(),
+                'status': 'in_progress' if record.progress < 100 else 'completed',
             })
             # Tự động tạo công việc cốt lõi khi phê duyệt
             record._create_core_tasks()

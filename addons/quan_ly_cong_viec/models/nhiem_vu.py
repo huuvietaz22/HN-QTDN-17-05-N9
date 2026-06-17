@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from datetime import date
 
 
@@ -96,7 +97,37 @@ class NhiemVu(models.Model):
         """Tự động tạo mã nhiệm vụ khi tạo mới"""
         if vals.get('ma_nhiem_vu', 'Mới') == 'Mới':
             vals['ma_nhiem_vu'] = self.env['ir.sequence'].next_by_code('nhiem_vu.sequence') or 'NV001'
-        return super(NhiemVu, self).create(vals)
+        record = super(NhiemVu, self).create(vals)
+        if record.cong_viec_id:
+            record.cong_viec_id._sync_progress_from_nhiem_vu()
+        return record
+
+    def write(self, vals):
+        cong_viec_before = self.mapped('cong_viec_id')
+        res = super(NhiemVu, self).write(vals)
+        if {'ti_le_hoan_thanh', 'cong_viec_id', 'ngay_ket_thuc'} & set(vals):
+            (cong_viec_before | self.mapped('cong_viec_id'))._sync_progress_from_nhiem_vu()
+        return res
+
+    def unlink(self):
+        cong_viec = self.mapped('cong_viec_id')
+        res = super(NhiemVu, self).unlink()
+        cong_viec._sync_progress_from_nhiem_vu()
+        return res
+
+    @api.constrains('ngay_bat_dau', 'ngay_ket_thuc', 'ngay_hoan_thanh_thuc_te')
+    def _check_dates(self):
+        for record in self:
+            if record.ngay_bat_dau and record.ngay_ket_thuc and record.ngay_bat_dau > record.ngay_ket_thuc:
+                raise ValidationError('Ngày bắt đầu nhiệm vụ không được lớn hơn ngày kết thúc.')
+            if record.ngay_bat_dau and record.ngay_hoan_thanh_thuc_te and record.ngay_hoan_thanh_thuc_te < record.ngay_bat_dau:
+                raise ValidationError('Ngày hoàn thành thực tế không được nhỏ hơn ngày bắt đầu.')
+
+    @api.constrains('ti_le_hoan_thanh')
+    def _check_ti_le_hoan_thanh(self):
+        for record in self:
+            if record.ti_le_hoan_thanh < 0 or record.ti_le_hoan_thanh > 100:
+                raise ValidationError('Tỷ lệ hoàn thành nhiệm vụ phải nằm trong khoảng 0-100%.')
 
     def name_get(self):
         """Hiển thị mã và tên nhiệm vụ"""

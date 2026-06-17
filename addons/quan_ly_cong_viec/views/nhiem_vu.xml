@@ -21,7 +21,7 @@
                                 <field name="nguoi_giao_viec_id" options="{'no_create': True}"/>
                             </group>
                             <group string="Tiến độ và đánh giá">
-                                <field name="trang_thai"/>
+                                <field name="trang_thai" readonly="1"/>
                                 <field name="ti_le_hoan_thanh" widget="progressbar"/>
                                 <field name="ngay_bat_dau"/>
                                 <field name="ngay_ket_thuc"/>

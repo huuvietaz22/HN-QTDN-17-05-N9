@@ -152,7 +152,18 @@ Chỉ phân tích các rủi ro thực sự quan trọng (tối đa 3-5 rủi ro
             response_text = response_text.strip()
             
             result = json.loads(response_text)
-            risks = result.get('risks', [])
+            risks = []
+            for item in result.get('risks', []):
+                risks.append({
+                    'risk_type': item.get('type') or item.get('risk_type') or 'scope',
+                    'name': item.get('name') or 'Rủi ro từ Gemini AI',
+                    'description': item.get('description') or '',
+                    'probability': min(float(item.get('probability', 50.0)) / 100.0, 1.0),
+                    'impact_score': float(item.get('impact') or item.get('impact_score') or 5.0),
+                    'root_cause': item.get('root_cause') or '',
+                    'mitigation_plan': item.get('mitigation_plan') or '',
+                    'ai_confidence': min(float(item.get('confidence', 70.0)) / 100.0, 1.0),
+                })
             
             _logger.info(f"Gemini analysis completed. Found {len(risks)} risks for project {project.projects_id}")
             

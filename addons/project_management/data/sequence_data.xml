@@ -10,5 +10,14 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+        <record id="seq_project_change_request" model="ir.sequence">
+            <field name="name">Mã yêu cầu thay đổi</field>
+            <field name="code">project.change.request.sequence</field>
+            <field name="prefix">CR</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
     </data>
 </odoo>

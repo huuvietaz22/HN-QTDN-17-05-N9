@@ -3,14 +3,14 @@
     'name': "Quản lý Công việc",
 
     'summary': """
-        Module quản lý công việc, dự án, nhiệm vụ và theo dõi tiến độ""",
+        Module quản lý công việc, nhiệm vụ, tiến độ và hiệu quả nhân viên""",
 
     'description': """
         Module quản lý công việc bao gồm:
-        - Quản lý dự án
         - Quản lý công việc
         - Phân công nhiệm vụ
         - Theo dõi tiến độ
+        - Báo cáo hiệu quả làm việc
     """,
 
     'author': "My Company",
@@ -18,6 +18,7 @@
 
     'category': 'Project Management',
     'version': '1.0',
+    'license': 'LGPL-3',
 
     'depends': ['base', 'nhan_su'],  # Phụ thuộc vào module nhan_su
     # Note: project_management là soft dependency - không cần khai báo ở đây

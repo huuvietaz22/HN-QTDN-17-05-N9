@@ -63,7 +63,7 @@ class BaoCaoHieuQua(models.Model):
     ], string='Xếp loại', compute='_compute_xep_loai', store=True)
     
     # Liên kết đến nhiệm vụ
-    nhiem_vu_ids = fields.One2many(
+    nhiem_vu_ids = fields.Many2many(
         'nhiem_vu',
         compute='_compute_nhiem_vu_ids',
         string='Danh sách nhiệm vụ'
@@ -71,36 +71,40 @@ class BaoCaoHieuQua(models.Model):
     
     ghi_chu = fields.Text(string='Ghi chú')
     
+    def _get_period_nhiem_vu(self):
+        self.ensure_one()
+        if not (self.nhan_vien_id and self.thang and self.nam):
+            return self.env['nhiem_vu']
+
+        start_date = f"{self.nam}-{self.thang.zfill(2)}-01"
+        if int(self.thang) == 12:
+            end_date = f"{self.nam + 1}-01-01"
+        else:
+            end_date = f"{self.nam}-{str(int(self.thang) + 1).zfill(2)}-01"
+
+        return self.env['nhiem_vu'].search([
+            ('nguoi_thuc_hien_id', '=', self.nhan_vien_id.id),
+            ('ngay_bat_dau', '>=', start_date),
+            ('ngay_bat_dau', '<', end_date),
+        ])
+
     @api.depends('nhan_vien_id', 'thang', 'nam')
     def _compute_nhiem_vu_ids(self):
         """Lấy danh sách nhiệm vụ của nhân viên trong tháng"""
         for record in self:
-            if record.nhan_vien_id and record.thang and record.nam:
-                # Tính ngày đầu và cuối tháng
-                start_date = f"{record.nam}-{record.thang}-01"
-                if int(record.thang) == 12:
-                    end_date = f"{record.nam + 1}-01-01"
-                else:
-                    end_date = f"{record.nam}-{int(record.thang) + 1}-01"
-                
-                record.nhiem_vu_ids = self.env['nhiem_vu'].search([
-                    ('nguoi_thuc_hien_id', '=', record.nhan_vien_id.id),
-                    ('ngay_bat_dau', '>=', start_date),
-                    ('ngay_bat_dau', '<', end_date),
-                ])
-            else:
-                record.nhiem_vu_ids = False
+            record.nhiem_vu_ids = record._get_period_nhiem_vu()
     
-    @api.depends('nhiem_vu_ids', 'nhiem_vu_ids.trang_thai')
+    @api.depends('nhan_vien_id', 'thang', 'nam')
     def _compute_thong_ke(self):
         """Tính toán thống kê nhiệm vụ"""
         for record in self:
-            record.tong_nhiem_vu = len(record.nhiem_vu_ids)
+            nhiem_vu_ids = record._get_period_nhiem_vu()
+            record.tong_nhiem_vu = len(nhiem_vu_ids)
             record.nhiem_vu_hoan_thanh = len(
-                record.nhiem_vu_ids.filtered(lambda n: n.trang_thai == 'hoan_thanh')
+                nhiem_vu_ids.filtered(lambda n: n.trang_thai == 'hoan_thanh')
             )
             record.nhiem_vu_tre_han = len(
-                record.nhiem_vu_ids.filtered(lambda n: n.trang_thai == 'qua_han')
+                nhiem_vu_ids.filtered(lambda n: n.trang_thai == 'qua_han')
             )
             
             if record.tong_nhiem_vu > 0:
@@ -108,7 +112,7 @@ class BaoCaoHieuQua(models.Model):
             else:
                 record.ty_le_hoan_thanh = 0.0
     
-    @api.depends('nhiem_vu_ids', 'nhiem_vu_ids.danh_gia')
+    @api.depends('nhan_vien_id', 'thang', 'nam')
     def _compute_diem_danh_gia(self):
         """Tính điểm đánh giá trung bình"""
         diem_map = {
@@ -118,7 +122,7 @@ class BaoCaoHieuQua(models.Model):
             'yeu': 4
         }
         for record in self:
-            nhiem_vu_co_danh_gia = record.nhiem_vu_ids.filtered(lambda n: n.danh_gia)
+            nhiem_vu_co_danh_gia = record._get_period_nhiem_vu().filtered(lambda n: n.danh_gia)
             if nhiem_vu_co_danh_gia:
                 tong_diem = sum(diem_map.get(n.danh_gia, 0) for n in nhiem_vu_co_danh_gia)
                 record.diem_trung_binh = tong_diem / len(nhiem_vu_co_danh_gia)

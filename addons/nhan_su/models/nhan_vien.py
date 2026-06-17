@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class NhanVien(models.Model):
@@ -38,6 +39,24 @@ class NhanVien(models.Model):
     so_dien_thoai = fields.Char(string="Số điện thoại")
     image = fields.Binary(string="Ảnh nhân viên")
 
+    # Thông tin phục vụ tính chi phí nhân sự cho dự án.
+    loai_hop_dong = fields.Selection(
+        selection=[
+            ('toan_thoi_gian', 'Toàn thời gian'),
+            ('ban_thoi_gian', 'Bán thời gian'),
+            ('thuc_tap', 'Thực tập'),
+            ('cong_tac_vien', 'Cộng tác viên'),
+        ],
+        string='Loại hợp đồng',
+        default='toan_thoi_gian'
+    )
+    ngay_vao_lam = fields.Date(string='Ngày vào làm')
+    luong_co_ban = fields.Float(string='Lương cơ bản/tháng')
+    don_gia_gio = fields.Float(
+        string='Đơn giá giờ',
+        help='Dùng để tính chi phí nhân sự theo giờ làm thực tế của công việc/dự án.'
+    )
+
     # Liên kết Many2one - suffix _id
     chuc_vu_id = fields.Many2one('chuc_vu', string='Chức vụ', ondelete='set null')
     phong_ban_id = fields.Many2one('phong_ban', string='Phòng ban', ondelete='set null')
@@ -66,6 +85,12 @@ class NhanVien(models.Model):
         if vals.get('ma_nhan_vien', 'Mới') == 'Mới':
             vals['ma_nhan_vien'] = self.env['ir.sequence'].next_by_code('nhan_vien.sequence') or 'NV001'
         return super(NhanVien, self).create(vals)
+
+    @api.constrains('luong_co_ban', 'don_gia_gio')
+    def _check_salary_values(self):
+        for record in self:
+            if record.luong_co_ban < 0 or record.don_gia_gio < 0:
+                raise ValidationError('Lương cơ bản và đơn giá giờ không được âm.')
 
     def name_get(self):
         """Hiển thị mã và họ tên nhân viên"""

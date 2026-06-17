@@ -114,7 +114,7 @@ class RiskAIEngine(models.Model):
         # Rule 1: Chi tiêu vượt ngân sách
         if spent_percentage > 100:
             overrun = total_spent - total_budget
-            probability = 100.0
+            probability = 1.0
             impact = 10.0
             
             description = f"Đã chi {total_spent:,.0f} VND, vượt ngân sách {overrun:,.0f} VND ({spent_percentage:.1f}%)."
@@ -137,7 +137,7 @@ class RiskAIEngine(models.Model):
                 'description': description,
                 'root_cause': root_cause,
                 'mitigation_plan': mitigation,
-                'ai_confidence': 95.0
+                'ai_confidence': 0.95
             })
         
         # Rule 2: Chi tiêu nhanh hơn tiến độ (Burn rate cao)

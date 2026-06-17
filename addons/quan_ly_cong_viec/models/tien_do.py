@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class TienDo(models.Model):
@@ -51,6 +52,19 @@ class TienDo(models.Model):
             res.nhiem_vu_id.ti_le_hoan_thanh = vals['ti_le_hoan_thanh']
         
         return res
+
+    def write(self, vals):
+        res = super(TienDo, self).write(vals)
+        if 'ti_le_hoan_thanh' in vals:
+            for record in self.filtered('nhiem_vu_id'):
+                record.nhiem_vu_id.ti_le_hoan_thanh = vals['ti_le_hoan_thanh']
+        return res
+
+    @api.constrains('ti_le_hoan_thanh')
+    def _check_ti_le_hoan_thanh(self):
+        for record in self:
+            if record.ti_le_hoan_thanh < 0 or record.ti_le_hoan_thanh > 100:
+                raise ValidationError('Tỷ lệ hoàn thành tiến độ phải nằm trong khoảng 0-100%.')
 
     def name_get(self):
         """Hiển thị mã tiến độ"""

@@ -25,6 +25,8 @@
                                 <field name="trang_thai"/>
                                 <!-- Cho phép người dùng nhập/sửa trực tiếp % hoàn thành -->
                                 <field name="ti_le_hoan_thanh"/>
+                                <field name="tong_nhiem_vu" readonly="1"/>
+                                <field name="nhiem_vu_hoan_thanh" readonly="1"/>
                                 <field name="gio_lam_du_kien"/>
                                 <field name="gio_lam_thuc_te"/>
                             </group>
@@ -33,6 +35,19 @@
                             <field name="mo_ta" nolabel="1"/>
                         </group>
                         <notebook>
+                            <page string="Nhiệm vụ">
+                                <field name="nhiem_vu_ids" context="{'default_cong_viec_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="ma_nhiem_vu" readonly="1"/>
+                                        <field name="ten_nhiem_vu"/>
+                                        <field name="nguoi_thuc_hien_id" options="{'no_create': True}"/>
+                                        <field name="ngay_bat_dau"/>
+                                        <field name="ngay_ket_thuc"/>
+                                        <field name="ti_le_hoan_thanh" widget="progressbar"/>
+                                        <field name="trang_thai" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Nhân viên thực hiện">
                                 <field name="nhan_vien_phan_cong_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </page>
@@ -56,6 +71,7 @@
                            decoration-danger="trang_thai=='tam_dung'"/>
                     <field name="muc_do_uu_tien"/>
                     <field name="ti_le_hoan_thanh" widget="progressbar"/>
+                    <field name="tong_nhiem_vu"/>
                     <field name="ngay_bat_dau"/>
                     <field name="ngay_ket_thuc"/>
                 </tree>

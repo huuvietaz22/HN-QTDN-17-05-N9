@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class Expenses(models.Model):
     _name = 'expenses'
@@ -11,4 +12,8 @@ class Expenses(models.Model):
     amount = fields.Float(string="Số tiền", required=True)
     date = fields.Date(string="Ngày chi tiêu", required=True, default=fields.Date.today)
 
-    
+    @api.constrains('amount')
+    def _check_amount(self):
+        for record in self:
+            if record.amount <= 0:
+                raise ValidationError('Số tiền chi phí phải lớn hơn 0.')

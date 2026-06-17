@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Milestones -->
+        <record id="view_project_milestone_tree" model="ir.ui.view">
+            <field name="name">project.milestone.tree</field>
+            <field name="model">project.milestone</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                    <field name="planned_date"/>
+                    <field name="actual_date"/>
+                    <field name="completion_percent" widget="progressbar"/>
+                    <field name="state"
+                        decoration-success="state == 'done'"
+                        decoration-warning="state == 'in_progress'"
+                        decoration-danger="state == 'late'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_project_milestone_form" model="ir.ui.view">
+            <field name="name">project.milestone.form</field>
+            <field name="model">project.milestone</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_start" string="Bắt đầu" type="object" class="btn-primary"
+                                attrs="{'invisible': [('state', 'not in', ['draft', 'late'])]}"/>
+                        <button name="action_mark_done" string="Hoàn thành" type="object" class="btn-success"
+                                attrs="{'invisible': [('state', '=', 'done')]}"/>
+                        <button name="action_mark_late" string="Đánh dấu trễ" type="object" class="btn-warning"
+                                attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}"/>
+                        <button name="action_cancel" string="Hủy" type="object"
+                                attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="project_id"/>
+                                <field name="name"/>
+                                <field name="responsible_id"/>
+                            </group>
+                            <group>
+                                <field name="planned_date"/>
+                                <field name="actual_date"/>
+                                <field name="completion_percent"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Bàn giao">
+                                <group>
+                                    <field name="deliverable"/>
+                                    <field name="acceptance_criteria"/>
+                                    <field name="note"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_project_milestone_search" model="ir.ui.view">
+            <field name="name">project.milestone.search</field>
+            <field name="model">project.milestone</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="project_id"/>
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                    <filter name="late" string="Trễ hạn" domain="[('state', '=', 'late')]"/>
+                    <filter name="done" string="Hoàn thành" domain="[('state', '=', 'done')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter name="group_project" string="Dự án" context="{'group_by': 'project_id'}"/>
+                        <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                        <filter name="group_responsible" string="Người phụ trách" context="{'group_by': 'responsible_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_project_milestone" model="ir.actions.act_window">
+            <field name="name">Mốc nghiệm thu</field>
+            <field name="res_model">project.milestone</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_project_milestone_search"/>
+        </record>
+
+        <!-- Change Requests -->
+        <record id="view_project_change_request_tree" model="ir.ui.view">
+            <field name="name">project.change.request.tree</field>
+            <field name="model">project.change.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="requested_by"/>
+                    <field name="request_date"/>
+                    <field name="change_type"/>
+                    <field name="extra_budget"/>
+                    <field name="extra_days"/>
+                    <field name="state"
+                        decoration-info="state == 'submitted'"
+                        decoration-success="state in ['approved', 'implemented']"
+                        decoration-danger="state == 'rejected'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_project_change_request_form" model="ir.ui.view">
+            <field name="name">project.change.request.form</field>
+            <field name="model">project.change.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_submit" string="Gửi duyệt" type="object" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_approve" string="Duyệt" type="object" class="btn-success"
+                                attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_reject" string="Từ chối" type="object" class="btn-danger"
+                                attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_implement" string="Đã triển khai" type="object"
+                                attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,implemented"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="code" readonly="1"/></h1>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="requested_by"/>
+                                <field name="request_date"/>
+                                <field name="change_type"/>
+                            </group>
+                            <group>
+                                <field name="extra_budget"/>
+                                <field name="extra_days"/>
+                                <field name="approver_id" readonly="1"/>
+                                <field name="approval_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung">
+                                <group>
+                                    <field name="reason"/>
+                                    <field name="impact_analysis"/>
+                                    <field name="rejection_reason"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_project_change_request_search" model="ir.ui.view">
+            <field name="name">project.change.request.search</field>
+            <field name="model">project.change.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="requested_by"/>
+                    <filter name="submitted" string="Chờ duyệt" domain="[('state', '=', 'submitted')]"/>
+                    <filter name="approved" string="Đã duyệt" domain="[('state', '=', 'approved')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter name="group_project" string="Dự án" context="{'group_by': 'project_id'}"/>
+                        <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                        <filter name="group_type" string="Loại thay đổi" context="{'group_by': 'change_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_project_change_request" model="ir.actions.act_window">
+            <field name="name">Yêu cầu thay đổi</field>
+            <field name="res_model">project.change.request</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_project_change_request_search"/>
+        </record>
+
+        <!-- Meetings -->
+        <record id="view_project_meeting_tree" model="ir.ui.view">
+            <field name="name">project.meeting.tree</field>
+            <field name="model">project.meeting</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="meeting_date"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="organizer_id"/>
+                    <field name="attendee_ids" widget="many2many_tags"/>
+                    <field name="next_meeting_date"/>
+                    <field name="state"
+                        decoration-success="state == 'done'"
+                        decoration-muted="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_project_meeting_form" model="ir.ui.view">
+            <field name="name">project.meeting.form</field>
+            <field name="model">project.meeting</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_done" string="Đã họp" type="object" class="btn-success"
+                                attrs="{'invisible': [('state', '=', 'done')]}"/>
+                        <button name="action_cancel" string="Hủy" type="object"
+                                attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="planned,done"/>
+                    </header>
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="meeting_date"/>
+                                <field name="organizer_id"/>
+                            </group>
+                            <group>
+                                <field name="attendee_ids" widget="many2many_tags"/>
+                                <field name="next_meeting_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung họp">
+                                <group>
+                                    <field name="agenda"/>
+                                    <field name="minutes"/>
+                                    <field name="decisions"/>
+                                    <field name="action_items"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_project_meeting_search" model="ir.ui.view">
+            <field name="name">project.meeting.search</field>
+            <field name="model">project.meeting</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="organizer_id"/>
+                    <filter name="planned" string="Đã lên lịch" domain="[('state', '=', 'planned')]"/>
+                    <filter name="done" string="Đã họp" domain="[('state', '=', 'done')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter name="group_project" string="Dự án" context="{'group_by': 'project_id'}"/>
+                        <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                        <filter name="group_organizer" string="Người chủ trì" context="{'group_by': 'organizer_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_project_meeting" model="ir.actions.act_window">
+            <field name="name">Biên bản họp</field>
+            <field name="res_model">project.meeting</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_project_meeting_search"/>
+        </record>
+    </data>
+</odoo>

@@ -31,6 +31,18 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Chi phí nhân sự">
+                                <group col="2">
+                                    <group string="Hợp đồng">
+                                        <field name="loai_hop_dong"/>
+                                        <field name="ngay_vao_lam"/>
+                                    </group>
+                                    <group string="Chi phí">
+                                        <field name="luong_co_ban"/>
+                                        <field name="don_gia_gio"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Lịch sử làm việc">
                                 <field name="lich_su_lam_viec_ids">
                                     <tree editable="bottom">
@@ -59,6 +71,8 @@
                     <field name="ho_ten"/>
                     <field name="chuc_vu_id"/>
                     <field name="phong_ban_id"/>
+                    <field name="loai_hop_dong"/>
+                    <field name="don_gia_gio"/>
                     <field name="ngay_sinh"/>
                     <field name="gioi_tinh"/>
                     <field name="email"/>
@@ -149,6 +163,7 @@
                     <field name="phong_ban_id"/>
                     <field name="email"/>
                     <field name="so_dien_thoai"/>
+                    <field name="loai_hop_dong"/>
                     <filter name="filter_nam" string="Nam" domain="[('gioi_tinh', '=', 'nam')]"/>
                     <filter name="filter_nu" string="Nữ" domain="[('gioi_tinh', '=', 'nu')]"/>
                     <group expand="0" string="Nhóm theo">

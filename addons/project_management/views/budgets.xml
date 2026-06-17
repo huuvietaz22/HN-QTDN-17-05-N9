@@ -17,8 +17,8 @@
                                 <field name="budget_planned"/>
                                 <field name="budget_allocated"/>
                                 <field name="budget_reserved"/>
-                                <field name="budget_spent"/>
-                                <field name="budget_difference"/>
+                                <field name="budget_spent" readonly="1"/>
+                                <field name="budget_difference" readonly="1"/>
                             </group>
 
                         </group>
@@ -50,8 +50,8 @@
                     <field name="budgets_name"/>
                     <field name="budget_planned"/>
                     <field name="budget_allocated"/>
-                    <field name="budget_spent"/>
-                    <field name="budget_difference"/>
+                    <field name="budget_spent" readonly="1"/>
+                    <field name="budget_difference" readonly="1"/>
                 </tree>
             </field>
         </record>

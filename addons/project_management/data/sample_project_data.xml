@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Phòng ban -->
+        <record id="sample_department_pm" model="phong_ban">
+            <field name="ma_phong_ban">PB-PM</field>
+            <field name="ten_phong_ban">Phòng Quản lý dự án</field>
+            <field name="mo_ta">Điều phối kế hoạch, tiến độ, nhân sự và nghiệm thu dự án.</field>
+        </record>
+        <record id="sample_department_dev" model="phong_ban">
+            <field name="ma_phong_ban">PB-DEV</field>
+            <field name="ten_phong_ban">Phòng Phát triển phần mềm</field>
+            <field name="mo_ta">Phân tích, thiết kế, lập trình và kiểm thử hệ thống.</field>
+        </record>
+        <record id="sample_department_qa" model="phong_ban">
+            <field name="ma_phong_ban">PB-QA</field>
+            <field name="ten_phong_ban">Phòng Kiểm thử chất lượng</field>
+            <field name="mo_ta">Kiểm thử chức năng, nghiệm thu nội bộ và quản lý lỗi.</field>
+        </record>
+
+        <!-- Chức vụ -->
+        <record id="sample_position_pm" model="chuc_vu">
+            <field name="ma_chuc_vu">CV-PM</field>
+            <field name="ten_chuc_vu">Quản lý dự án</field>
+        </record>
+        <record id="sample_position_ba" model="chuc_vu">
+            <field name="ma_chuc_vu">CV-BA</field>
+            <field name="ten_chuc_vu">Chuyên viên phân tích nghiệp vụ</field>
+        </record>
+        <record id="sample_position_dev" model="chuc_vu">
+            <field name="ma_chuc_vu">CV-DEV</field>
+            <field name="ten_chuc_vu">Lập trình viên</field>
+        </record>
+        <record id="sample_position_tester" model="chuc_vu">
+            <field name="ma_chuc_vu">CV-QA</field>
+            <field name="ten_chuc_vu">Kiểm thử viên</field>
+        </record>
+
+        <!-- Nhân viên -->
+        <record id="sample_employee_pm" model="nhan_vien">
+            <field name="ma_nhan_vien">NV-PM-001</field>
+            <field name="ho_ten_dem">Nguyễn Minh</field>
+            <field name="ten">An</field>
+            <field name="ngay_sinh">1990-04-12</field>
+            <field name="gioi_tinh">nam</field>
+            <field name="que_quan">Hà Nội</field>
+            <field name="email">an.pm@example.com</field>
+            <field name="so_dien_thoai">0901000001</field>
+            <field name="loai_hop_dong">toan_thoi_gian</field>
+            <field name="ngay_vao_lam">2024-01-15</field>
+            <field name="luong_co_ban">28000000</field>
+            <field name="don_gia_gio">180000</field>
+            <field name="chuc_vu_id" ref="sample_position_pm"/>
+            <field name="phong_ban_id" ref="sample_department_pm"/>
+        </record>
+        <record id="sample_employee_ba" model="nhan_vien">
+            <field name="ma_nhan_vien">NV-BA-001</field>
+            <field name="ho_ten_dem">Trần Thu</field>
+            <field name="ten">Hà</field>
+            <field name="ngay_sinh">1995-08-18</field>
+            <field name="gioi_tinh">nu</field>
+            <field name="que_quan">Đà Nẵng</field>
+            <field name="email">ha.ba@example.com</field>
+            <field name="so_dien_thoai">0901000002</field>
+            <field name="loai_hop_dong">toan_thoi_gian</field>
+            <field name="ngay_vao_lam">2024-06-01</field>
+            <field name="luong_co_ban">22000000</field>
+            <field name="don_gia_gio">140000</field>
+            <field name="chuc_vu_id" ref="sample_position_ba"/>
+            <field name="phong_ban_id" ref="sample_department_pm"/>
+        </record>
+        <record id="sample_employee_dev1" model="nhan_vien">
+            <field name="ma_nhan_vien">NV-DEV-001</field>
+            <field name="ho_ten_dem">Lê Quốc</field>
+            <field name="ten">Bảo</field>
+            <field name="ngay_sinh">1997-01-22</field>
+            <field name="gioi_tinh">nam</field>
+            <field name="que_quan">TP. Hồ Chí Minh</field>
+            <field name="email">bao.dev@example.com</field>
+            <field name="so_dien_thoai">0901000003</field>
+            <field name="loai_hop_dong">toan_thoi_gian</field>
+            <field name="ngay_vao_lam">2025-02-10</field>
+            <field name="luong_co_ban">24000000</field>
+            <field name="don_gia_gio">150000</field>
+            <field name="chuc_vu_id" ref="sample_position_dev"/>
+            <field name="phong_ban_id" ref="sample_department_dev"/>
+        </record>
+        <record id="sample_employee_dev2" model="nhan_vien">
+            <field name="ma_nhan_vien">NV-DEV-002</field>
+            <field name="ho_ten_dem">Phạm Gia</field>
+            <field name="ten">Khang</field>
+            <field name="ngay_sinh">1998-11-05</field>
+            <field name="gioi_tinh">nam</field>
+            <field name="que_quan">Cần Thơ</field>
+            <field name="email">khang.dev@example.com</field>
+            <field name="so_dien_thoai">0901000004</field>
+            <field name="loai_hop_dong">toan_thoi_gian</field>
+            <field name="ngay_vao_lam">2025-04-20</field>
+            <field name="luong_co_ban">21000000</field>
+            <field name="don_gia_gio">130000</field>
+            <field name="chuc_vu_id" ref="sample_position_dev"/>
+            <field name="phong_ban_id" ref="sample_department_dev"/>
+        </record>
+        <record id="sample_employee_qa" model="nhan_vien">
+            <field name="ma_nhan_vien">NV-QA-001</field>
+            <field name="ho_ten_dem">Vũ Ngọc</field>
+            <field name="ten">Mai</field>
+            <field name="ngay_sinh">1996-06-30</field>
+            <field name="gioi_tinh">nu</field>
+            <field name="que_quan">Hải Phòng</field>
+            <field name="email">mai.qa@example.com</field>
+            <field name="so_dien_thoai">0901000005</field>
+            <field name="loai_hop_dong">toan_thoi_gian</field>
+            <field name="ngay_vao_lam">2025-03-12</field>
+            <field name="luong_co_ban">19000000</field>
+            <field name="don_gia_gio">120000</field>
+            <field name="chuc_vu_id" ref="sample_position_tester"/>
+            <field name="phong_ban_id" ref="sample_department_qa"/>
+        </record>
+
+        <!-- Dự án -->
+        <record id="sample_project_internal_pm" model="projects">
+            <field name="projects_id">DA-SAMPLE-001</field>
+            <field name="projects_name">Xây dựng hệ thống quản lý dự án và công việc</field>
+            <field name="description">Dự án mẫu mô phỏng quy trình quản lý dự án, phân công công việc, theo dõi nhiệm vụ, ngân sách và chi phí.</field>
+            <field name="manager_name" ref="sample_employee_pm"/>
+            <field name="start_date">2026-06-01</field>
+            <field name="actual_end_date">2026-08-31</field>
+            <field name="phuong_phap_quan_ly">scrum</field>
+            <field name="status">in_progress</field>
+            <field name="approval_state">approved</field>
+            <field name="approver_id" ref="sample_employee_pm"/>
+            <field name="approval_date">2026-06-05 09:00:00</field>
+        </record>
+        <record id="sample_project_mobile_app" model="projects">
+            <field name="projects_id">DA-SAMPLE-002</field>
+            <field name="projects_name">Ứng dụng di động theo dõi tiến độ công việc</field>
+            <field name="description">Dự án mẫu thứ hai dùng để thử biểu đồ, ngân sách và trạng thái dự án ở giai đoạn khởi tạo.</field>
+            <field name="manager_name" ref="sample_employee_ba"/>
+            <field name="start_date">2026-07-01</field>
+            <field name="actual_end_date">2026-10-15</field>
+            <field name="phuong_phap_quan_ly">kanban</field>
+            <field name="status">not_started</field>
+            <field name="approval_state">pending</field>
+        </record>
+
+        <!-- Quản trị dự án: mốc nghiệm thu, thay đổi, họp -->
+        <record id="sample_milestone_kickoff" model="project.milestone">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">Kickoff và chốt phạm vi</field>
+            <field name="responsible_id" ref="sample_employee_pm"/>
+            <field name="planned_date">2026-06-05</field>
+            <field name="actual_date">2026-06-05</field>
+            <field name="completion_percent">100</field>
+            <field name="state">done</field>
+            <field name="deliverable">Biên bản kickoff, phạm vi dự án và danh sách stakeholder.</field>
+            <field name="acceptance_criteria">Các bên liên quan xác nhận phạm vi, mục tiêu và timeline tổng thể.</field>
+        </record>
+        <record id="sample_milestone_analysis" model="project.milestone">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">Nghiệm thu tài liệu phân tích</field>
+            <field name="responsible_id" ref="sample_employee_ba"/>
+            <field name="planned_date">2026-06-18</field>
+            <field name="actual_date">2026-06-18</field>
+            <field name="completion_percent">100</field>
+            <field name="state">done</field>
+            <field name="deliverable">Tài liệu đặc tả nghiệp vụ và luồng xử lý chính.</field>
+            <field name="acceptance_criteria">Tài liệu đủ use case, actor, dữ liệu đầu vào/đầu ra và quy trình duyệt.</field>
+        </record>
+        <record id="sample_milestone_uat" model="project.milestone">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">UAT và bàn giao nội bộ</field>
+            <field name="responsible_id" ref="sample_employee_qa"/>
+            <field name="planned_date">2026-08-15</field>
+            <field name="completion_percent">0</field>
+            <field name="state">draft</field>
+            <field name="deliverable">Checklist kiểm thử, biên bản UAT và tài liệu bàn giao.</field>
+            <field name="acceptance_criteria">Không còn lỗi nghiêm trọng, các chức năng chính được stakeholder xác nhận.</field>
+        </record>
+
+        <record id="sample_change_request_scope" model="project.change.request">
+            <field name="code">CR-SAMPLE-001</field>
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">Bổ sung màn hình theo dõi chi phí nhân sự</field>
+            <field name="requested_by" ref="sample_employee_pm"/>
+            <field name="request_date">2026-06-26</field>
+            <field name="change_type">scope</field>
+            <field name="state">approved</field>
+            <field name="reason">Ban quản lý cần nhìn riêng chi phí nhân sự theo công việc để kiểm soát ngân sách dự án.</field>
+            <field name="impact_analysis">Tăng phạm vi báo cáo, cần bổ sung field đơn giá giờ và tính chi phí nhân sự thực tế.</field>
+            <field name="extra_budget">6000000</field>
+            <field name="extra_days">3</field>
+            <field name="approver_id" ref="sample_employee_pm"/>
+            <field name="approval_date">2026-06-27 10:00:00</field>
+        </record>
+        <record id="sample_change_request_schedule" model="project.change.request">
+            <field name="code">CR-SAMPLE-002</field>
+            <field name="project_id" ref="sample_project_mobile_app"/>
+            <field name="name">Điều chỉnh lịch thiết kế prototype mobile</field>
+            <field name="requested_by" ref="sample_employee_ba"/>
+            <field name="request_date">2026-07-06</field>
+            <field name="change_type">schedule</field>
+            <field name="state">submitted</field>
+            <field name="reason">Cần thêm thời gian xác nhận luồng mobile với stakeholder.</field>
+            <field name="impact_analysis">Không tăng ngân sách, nhưng có thể lùi milestone thiết kế 2 ngày.</field>
+            <field name="extra_budget">0</field>
+            <field name="extra_days">2</field>
+        </record>
+
+        <record id="sample_meeting_kickoff" model="project.meeting">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">Kickoff dự án quản lý dự án và công việc</field>
+            <field name="meeting_date">2026-06-05 09:00:00</field>
+            <field name="organizer_id" ref="sample_employee_pm"/>
+            <field name="attendee_ids" eval="[(6, 0, [ref('sample_employee_pm'), ref('sample_employee_ba'), ref('sample_employee_dev1'), ref('sample_employee_qa')])]"/>
+            <field name="state">done</field>
+            <field name="agenda">Thống nhất phạm vi, vai trò, timeline và cách báo cáo tiến độ.</field>
+            <field name="minutes">Team thống nhất triển khai theo Scrum, cập nhật tiến độ theo nhiệm vụ và ghi nhận change request khi thay đổi phạm vi.</field>
+            <field name="decisions">Dùng module PM làm nơi theo dõi dự án, ngân sách, rủi ro và mốc nghiệm thu.</field>
+            <field name="action_items">BA hoàn thiện tài liệu yêu cầu; Dev dựng model; QA chuẩn bị checklist kiểm thử.</field>
+            <field name="next_meeting_date">2026-06-12 09:00:00</field>
+        </record>
+        <record id="sample_meeting_sprint_review" model="project.meeting">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="name">Sprint review: module dự án và chi phí</field>
+            <field name="meeting_date">2026-06-28 15:00:00</field>
+            <field name="organizer_id" ref="sample_employee_pm"/>
+            <field name="attendee_ids" eval="[(6, 0, [ref('sample_employee_pm'), ref('sample_employee_dev1'), ref('sample_employee_dev2'), ref('sample_employee_qa')])]"/>
+            <field name="state">done</field>
+            <field name="agenda">Review module dự án, ngân sách và chi phí nhân sự.</field>
+            <field name="minutes">Các màn hình chính đã chạy; cần bổ sung menu riêng cho chi phí nhân sự và dữ liệu mẫu rõ hơn.</field>
+            <field name="decisions">Duyệt bổ sung change request CR-SAMPLE-001.</field>
+            <field name="action_items">Dev bổ sung menu chi phí nhân sự; QA kiểm tra lại luồng tạo công việc và chi phí.</field>
+            <field name="next_meeting_date">2026-07-05 15:00:00</field>
+        </record>
+
+        <!-- Công việc -->
+        <record id="sample_task_analysis" model="cong_viec">
+            <field name="ma_cong_viec">CV-SAMPLE-001</field>
+            <field name="ten_cong_viec">Khảo sát và phân tích yêu cầu nghiệp vụ</field>
+            <field name="mo_ta">Thu thập yêu cầu, phân tích quy trình hiện tại và lập tài liệu đặc tả.</field>
+            <field name="du_an_id" ref="sample_project_internal_pm"/>
+            <field name="nguoi_phu_trach_id" ref="sample_employee_ba"/>
+            <field name="nhan_vien_phan_cong_ids" eval="[(6, 0, [ref('sample_employee_pm'), ref('sample_employee_ba')])]"/>
+            <field name="ngay_bat_dau">2026-06-03</field>
+            <field name="ngay_ket_thuc">2026-06-18</field>
+            <field name="muc_do_uu_tien">cao</field>
+            <field name="trang_thai">hoan_thanh</field>
+            <field name="ti_le_hoan_thanh">100</field>
+            <field name="gio_lam_du_kien">48</field>
+            <field name="gio_lam_thuc_te">46</field>
+        </record>
+        <record id="sample_task_development" model="cong_viec">
+            <field name="ma_cong_viec">CV-SAMPLE-002</field>
+            <field name="ten_cong_viec">Phát triển module quản lý dự án</field>
+            <field name="mo_ta">Xây dựng model, view, menu, phân quyền và luồng dữ liệu dự án.</field>
+            <field name="du_an_id" ref="sample_project_internal_pm"/>
+            <field name="nguoi_phu_trach_id" ref="sample_employee_dev1"/>
+            <field name="nhan_vien_phan_cong_ids" eval="[(6, 0, [ref('sample_employee_dev1'), ref('sample_employee_dev2')])]"/>
+            <field name="ngay_bat_dau">2026-06-19</field>
+            <field name="ngay_ket_thuc">2026-07-20</field>
+            <field name="muc_do_uu_tien">khan_cap</field>
+            <field name="trang_thai">dang_thuc_hien</field>
+            <field name="ti_le_hoan_thanh">60</field>
+            <field name="gio_lam_du_kien">160</field>
+            <field name="gio_lam_thuc_te">92</field>
+        </record>
+        <record id="sample_task_testing" model="cong_viec">
+            <field name="ma_cong_viec">CV-SAMPLE-003</field>
+            <field name="ten_cong_viec">Kiểm thử và nghiệm thu nội bộ</field>
+            <field name="mo_ta">Kiểm thử chức năng, ghi nhận lỗi, xác nhận sửa lỗi và chuẩn bị bàn giao.</field>
+            <field name="du_an_id" ref="sample_project_internal_pm"/>
+            <field name="nguoi_phu_trach_id" ref="sample_employee_qa"/>
+            <field name="nhan_vien_phan_cong_ids" eval="[(6, 0, [ref('sample_employee_qa'), ref('sample_employee_dev2')])]"/>
+            <field name="ngay_bat_dau">2026-07-21</field>
+            <field name="ngay_ket_thuc">2026-08-15</field>
+            <field name="muc_do_uu_tien">cao</field>
+            <field name="trang_thai">moi</field>
+            <field name="ti_le_hoan_thanh">0</field>
+            <field name="gio_lam_du_kien">80</field>
+            <field name="gio_lam_thuc_te">0</field>
+        </record>
+        <record id="sample_task_mobile_plan" model="cong_viec">
+            <field name="ma_cong_viec">CV-SAMPLE-004</field>
+            <field name="ten_cong_viec">Lập kế hoạch ứng dụng di động</field>
+            <field name="mo_ta">Xác định phạm vi, milestone và nguồn lực cho ứng dụng mobile.</field>
+            <field name="du_an_id" ref="sample_project_mobile_app"/>
+            <field name="nguoi_phu_trach_id" ref="sample_employee_ba"/>
+            <field name="nhan_vien_phan_cong_ids" eval="[(6, 0, [ref('sample_employee_ba'), ref('sample_employee_dev1')])]"/>
+            <field name="ngay_bat_dau">2026-07-01</field>
+            <field name="ngay_ket_thuc">2026-07-10</field>
+            <field name="muc_do_uu_tien">trung_binh</field>
+            <field name="trang_thai">moi</field>
+            <field name="ti_le_hoan_thanh">0</field>
+            <field name="gio_lam_du_kien">32</field>
+            <field name="gio_lam_thuc_te">0</field>
+        </record>
+
+        <!-- Nhiệm vụ -->
+        <record id="sample_subtask_interview" model="nhiem_vu">
+            <field name="ma_nhiem_vu">NV-SAMPLE-001</field>
+            <field name="ten_nhiem_vu">Phỏng vấn người dùng và tổng hợp yêu cầu</field>
+            <field name="cong_viec_id" ref="sample_task_analysis"/>
+            <field name="nguoi_thuc_hien_id" ref="sample_employee_ba"/>
+            <field name="nguoi_giao_viec_id" ref="sample_employee_pm"/>
+            <field name="ngay_bat_dau">2026-06-03</field>
+            <field name="ngay_ket_thuc">2026-06-10</field>
+            <field name="ngay_hoan_thanh_thuc_te">2026-06-09</field>
+            <field name="ti_le_hoan_thanh">100</field>
+            <field name="danh_gia">xuat_sac</field>
+        </record>
+        <record id="sample_subtask_spec" model="nhiem_vu">
+            <field name="ma_nhiem_vu">NV-SAMPLE-002</field>
+            <field name="ten_nhiem_vu">Viết tài liệu đặc tả nghiệp vụ</field>
+            <field name="cong_viec_id" ref="sample_task_analysis"/>
+            <field name="nguoi_thuc_hien_id" ref="sample_employee_ba"/>
+            <field name="nguoi_giao_viec_id" ref="sample_employee_pm"/>
+            <field name="ngay_bat_dau">2026-06-11</field>
+            <field name="ngay_ket_thuc">2026-06-18</field>
+            <field name="ngay_hoan_thanh_thuc_te">2026-06-18</field>
+            <field name="ti_le_hoan_thanh">100</field>
+            <field name="danh_gia">tot</field>
+        </record>
+        <record id="sample_subtask_project_model" model="nhiem_vu">
+            <field name="ma_nhiem_vu">NV-SAMPLE-003</field>
+            <field name="ten_nhiem_vu">Xây dựng model dự án và ngân sách</field>
+            <field name="cong_viec_id" ref="sample_task_development"/>
+            <field name="nguoi_thuc_hien_id" ref="sample_employee_dev1"/>
+            <field name="nguoi_giao_viec_id" ref="sample_employee_pm"/>
+            <field name="ngay_bat_dau">2026-06-19</field>
+            <field name="ngay_ket_thuc">2026-07-02</field>
+            <field name="ti_le_hoan_thanh">80</field>
+            <field name="danh_gia">tot</field>
+        </record>
+        <record id="sample_subtask_task_views" model="nhiem_vu">
+            <field name="ma_nhiem_vu">NV-SAMPLE-004</field>
+            <field name="ten_nhiem_vu">Hoàn thiện view công việc và nhiệm vụ</field>
+            <field name="cong_viec_id" ref="sample_task_development"/>
+            <field name="nguoi_thuc_hien_id" ref="sample_employee_dev2"/>
+            <field name="nguoi_giao_viec_id" ref="sample_employee_pm"/>
+            <field name="ngay_bat_dau">2026-07-03</field>
+            <field name="ngay_ket_thuc">2026-07-20</field>
+            <field name="ti_le_hoan_thanh">40</field>
+            <field name="danh_gia">trung_binh</field>
+        </record>
+        <record id="sample_subtask_test_plan" model="nhiem_vu">
+            <field name="ma_nhiem_vu">NV-SAMPLE-005</field>
+            <field name="ten_nhiem_vu">Lập kế hoạch kiểm thử hệ thống</field>
+            <field name="cong_viec_id" ref="sample_task_testing"/>
+            <field name="nguoi_thuc_hien_id" ref="sample_employee_qa"/>
+            <field name="nguoi_giao_viec_id" ref="sample_employee_pm"/>
+            <field name="ngay_bat_dau">2026-07-21</field>
+            <field name="ngay_ket_thuc">2026-07-25</field>
+            <field name="ti_le_hoan_thanh">0</field>
+        </record>
+
+        <!-- Tiến độ -->
+        <record id="sample_progress_interview_done" model="tien_do">
+            <field name="ma_tien_do">TD-SAMPLE-001</field>
+            <field name="nhiem_vu_id" ref="sample_subtask_interview"/>
+            <field name="nguoi_cap_nhat_id" ref="sample_employee_ba"/>
+            <field name="ngay_cap_nhat">2026-06-09 16:30:00</field>
+            <field name="noi_dung">Đã hoàn tất phỏng vấn người dùng chính và thống nhất danh sách yêu cầu ưu tiên.</field>
+            <field name="ti_le_hoan_thanh">100</field>
+        </record>
+        <record id="sample_progress_model_update" model="tien_do">
+            <field name="ma_tien_do">TD-SAMPLE-002</field>
+            <field name="nhiem_vu_id" ref="sample_subtask_project_model"/>
+            <field name="nguoi_cap_nhat_id" ref="sample_employee_dev1"/>
+            <field name="ngay_cap_nhat">2026-06-28 17:00:00</field>
+            <field name="noi_dung">Đã hoàn thành phần model dự án, đang bổ sung ràng buộc ngân sách và chi phí.</field>
+            <field name="ti_le_hoan_thanh">80</field>
+        </record>
+        <record id="sample_progress_view_update" model="tien_do">
+            <field name="ma_tien_do">TD-SAMPLE-003</field>
+            <field name="nhiem_vu_id" ref="sample_subtask_task_views"/>
+            <field name="nguoi_cap_nhat_id" ref="sample_employee_dev2"/>
+            <field name="ngay_cap_nhat">2026-07-08 15:00:00</field>
+            <field name="noi_dung">Đã dựng form/tree công việc, còn chỉnh tab nhiệm vụ và báo cáo.</field>
+            <field name="ti_le_hoan_thanh">40</field>
+        </record>
+
+        <!-- Ngân sách và chi phí -->
+        <record id="sample_budget_internal_pm" model="budgets">
+            <field name="budgets_id">BG-SAMPLE-001</field>
+            <field name="budgets_name">Ngân sách triển khai hệ thống quản lý</field>
+            <field name="projects_id" ref="sample_project_internal_pm"/>
+            <field name="budget_planned">150000000</field>
+            <field name="budget_allocated">120000000</field>
+            <field name="budget_reserved">30000000</field>
+        </record>
+        <record id="sample_budget_mobile_app" model="budgets">
+            <field name="budgets_id">BG-SAMPLE-002</field>
+            <field name="budgets_name">Ngân sách lập kế hoạch ứng dụng mobile</field>
+            <field name="projects_id" ref="sample_project_mobile_app"/>
+            <field name="budget_planned">90000000</field>
+            <field name="budget_allocated">60000000</field>
+            <field name="budget_reserved">30000000</field>
+        </record>
+        <record id="sample_expense_workshop" model="expenses">
+            <field name="expenses_name">Chi phí workshop khảo sát nghiệp vụ</field>
+            <field name="budgets_id" ref="sample_budget_internal_pm"/>
+            <field name="cong_viec_id" ref="sample_task_analysis"/>
+            <field name="amount">12000000</field>
+            <field name="date">2026-06-08</field>
+        </record>
+        <record id="sample_expense_dev_tools" model="expenses">
+            <field name="expenses_name">Chi phí công cụ phát triển và kiểm thử</field>
+            <field name="budgets_id" ref="sample_budget_internal_pm"/>
+            <field name="cong_viec_id" ref="sample_task_development"/>
+            <field name="amount">28000000</field>
+            <field name="date">2026-06-25</field>
+        </record>
+        <record id="sample_expense_mobile_design" model="expenses">
+            <field name="expenses_name">Chi phí thiết kế prototype mobile</field>
+            <field name="budgets_id" ref="sample_budget_mobile_app"/>
+            <field name="cong_viec_id" ref="sample_task_mobile_plan"/>
+            <field name="amount">9000000</field>
+            <field name="date">2026-07-05</field>
+        </record>
+
+        <!-- Báo cáo hiệu quả mẫu -->
+        <record id="sample_performance_ba_2026_06" model="bao_cao_hieu_qua">
+            <field name="nhan_vien_id" ref="sample_employee_ba"/>
+            <field name="thang">6</field>
+            <field name="nam">2026</field>
+            <field name="ghi_chu">Báo cáo mẫu cho nhân viên phân tích nghiệp vụ trong giai đoạn khảo sát.</field>
+        </record>
+    </data>
+</odoo>

@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "project_management",
+    'name': "Quản lý Dự án",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Quản lý dự án, công việc, ngân sách, chi phí và rủi ro""",
 
     'description': """
-        Long description of module's purpose
+        Module quản lý dự án bao gồm:
+        - Quản lý thông tin dự án và phê duyệt dự án
+        - Kết nối công việc/nhiệm vụ từ module Quản lý Công việc
+        - Theo dõi tiến độ dự án tự động theo công việc
+        - Quản lý ngân sách, chi phí và chênh lệch ngân sách
+        - Theo dõi rủi ro dự án và hỗ trợ phân tích AI tuỳ chọn
     """,
 
     'author': "My Company",
@@ -16,8 +20,9 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Project Management',
+    'version': '1.0',
+    'license': 'LGPL-3',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'nhan_su', 'mail', 'quan_ly_cong_viec'],
@@ -26,6 +31,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
+        'data/sample_project_data.xml',
         'report/report_action.xml',
         'report/project_approval_report.xml',
         # Load các view/actions trước
@@ -33,6 +39,8 @@
         'views/employees.xml',
         'views/budgets.xml',
         'views/expenses.xml',
+        'views/labor_cost_views.xml',
+        'views/project_governance_views.xml',
         'views/chart.xml',
         'views/chartoftasks.xml',
         'views/cong_viec_extend.xml',
@@ -49,8 +57,7 @@
     #     ],
     # },
 
-    # only loaded in demonstration mode
-    # 'demo': [
-    #     'demo/demo.xml',
-    # ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
 }

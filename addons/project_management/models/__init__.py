@@ -12,6 +12,8 @@ from . import project_extensions
 
 from . import nhan_vien_extend
 
+from . import project_governance
+
 from . import risk_assessment
 
 from . import risk_ai_engine

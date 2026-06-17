@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class Budgets(models.Model):
     _name = 'budgets'
@@ -37,6 +38,12 @@ class Budgets(models.Model):
         for record in self:
             record.budget_difference = record.budget_planned - record.budget_spent
 
+    @api.constrains('budget_planned', 'budget_allocated', 'budget_reserved')
+    def _check_budget_values(self):
+        for record in self:
+            if record.budget_planned < 0 or record.budget_allocated < 0 or record.budget_reserved < 0:
+                raise ValidationError('Các giá trị ngân sách không được âm.')
+
     @api.model
     def create(self, vals):
         """Tự động tạo mã ngân sách khi tạo mới"""
@@ -48,6 +55,6 @@ class Budgets(models.Model):
     def name_get(self):
         result = []
         for record in self:
-            name = f"{record.budgets_name}"
+            name = f"{record.budgets_id} - {record.budgets_name}" if record.budgets_name else record.budgets_id
             result.append((record.id, name))
         return result

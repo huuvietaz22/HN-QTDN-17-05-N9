@@ -8,9 +8,14 @@
             <field name="inherit_id" ref="quan_ly_cong_viec.view_cong_viec_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='ten_cong_viec']" position="after">
-                    <field name="du_an_id" 
+                    <field name="du_an_id"
                            options="{'no_create': True}"
                            string="Dự án"/>
+                </xpath>
+                <xpath expr="//field[@name='gio_lam_thuc_te']" position="after">
+                    <field name="don_gia_gio_trung_binh" readonly="1"/>
+                    <field name="chi_phi_nhan_su_du_kien" readonly="1"/>
+                    <field name="chi_phi_nhan_su_thuc_te" readonly="1"/>
                 </xpath>
             </field>
         </record>
@@ -24,6 +29,9 @@
                 <xpath expr="//field[@name='ten_cong_viec']" position="after">
                     <field name="du_an_id" string="Dự án"/>
                 </xpath>
+                <xpath expr="//field[@name='ti_le_hoan_thanh']" position="after">
+                    <field name="chi_phi_nhan_su_thuc_te" string="Chi phí nhân sự"/>
+                </xpath>
             </field>
         </record>
 
@@ -36,9 +44,12 @@
                 <xpath expr="//field[@name='ten_cong_viec']" position="after">
                     <field name="du_an_id"/>
                 </xpath>
+                <xpath expr="//field[@name='du_an_id']" position="after">
+                    <field name="chi_phi_nhan_su_thuc_te"/>
+                </xpath>
                 <xpath expr="//group[@expand='0']" position="inside">
-                    <filter string="Dự án" 
-                            name="group_du_an" 
+                    <filter string="Dự án"
+                            name="group_du_an"
                             context="{'group_by': 'du_an_id'}"/>
                 </xpath>
             </field>

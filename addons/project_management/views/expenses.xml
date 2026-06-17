@@ -63,8 +63,5 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_expenses_search"/>
         </record>
-
-        <menuitem id="menu_expenses_root" name="Chi phí dự án"/>
-        <menuitem id="menu_expenses" name="Chi phí" parent="menu_expenses_root" action="action_expenses"/>
     </data>
 </odoo>

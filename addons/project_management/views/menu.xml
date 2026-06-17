@@ -37,25 +37,59 @@
             sequence="4"
             action="action_expenses"
         />
+
+        <menuitem name="Chi phí nhân sự"
+            id="menu_labor_costs"
+            parent="menu_root"
+            sequence="5"
+            action="action_labor_costs"
+        />
+
+        <menuitem
+            id="menu_governance"
+            name="Quản trị dự án"
+            parent="menu_root"
+            sequence="6"/>
+
+        <menuitem
+            id="menu_project_milestone"
+            name="Mốc nghiệm thu"
+            parent="menu_governance"
+            sequence="1"
+            action="action_project_milestone"/>
+
+        <menuitem
+            id="menu_project_change_request"
+            name="Yêu cầu thay đổi"
+            parent="menu_governance"
+            sequence="2"
+            action="action_project_change_request"/>
+
+        <menuitem
+            id="menu_project_meeting"
+            name="Biên bản họp"
+            parent="menu_governance"
+            sequence="3"
+            action="action_project_meeting"/>
         
         <menuitem name="Biểu đồ dự án" 
             id="menu_chart" 
             parent="menu_root" 
-            sequence="5"
+            sequence="7"
             action="action_bieu_do_du_an"
         />
 
         <menuitem name="Biểu đồ công việc" 
             id="menu_chartoftasks" 
             parent="menu_root" 
-            sequence="6"
+            sequence="8"
             action="action_bieu_do_cong_viec"
         />
 
         <menuitem name="AI Quản lý rủi ro" 
             id="menu_risk_management" 
             parent="menu_root" 
-            sequence="7"
+            sequence="9"
             action="action_risk_assessment"
         />
 
