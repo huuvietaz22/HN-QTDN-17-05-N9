@@ -71,6 +71,13 @@
             parent="menu_governance"
             sequence="3"
             action="action_project_meeting"/>
+
+        <menuitem
+            id="menu_project_team_role"
+            name="Vai trò dự án"
+            parent="menu_governance"
+            sequence="4"
+            action="action_project_team_role"/>
         
         <menuitem name="Biểu đồ dự án" 
             id="menu_chart" 

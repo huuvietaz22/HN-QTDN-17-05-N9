@@ -11,3 +11,4 @@ access_gemini_ai_provider,gemini.ai.provider,model_gemini_ai_provider,base.group
 access_project_milestone,project.milestone,model_project_milestone,base.group_user,1,1,1,1
 access_project_change_request,project.change.request,model_project_change_request,base.group_user,1,1,1,1
 access_project_meeting,project.meeting,model_project_meeting,base.group_user,1,1,1,1
+access_project_team_role,project.team.role,model_project_team_role,base.group_user,1,1,1,1

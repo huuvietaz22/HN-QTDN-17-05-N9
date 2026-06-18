@@ -48,18 +48,26 @@
                                style="margin-right: 20px;"/>
                     </header>
                     <sheet>
+                        <div class="oe_title">
+                            <label for="projects_name"/>
+                            <h1>
+                                <field name="projects_name" placeholder="Tên dự án"/>
+                            </h1>
+                            <h2>
+                                <field name="projects_id" readonly="1"/>
+                            </h2>
+                        </div>
                         <group col="2">
                             <group>
-                                <field name="projects_id"/>
-                                <field name="projects_name"/>
                                 <field name="manager_name"/>
+                                <field name="owner_id"/>
                                 <field name="phuong_phap_quan_ly"/>
                                 <field name="description"/>
                             </group>
                             <group>
                                 <field name="start_date"/>
                                 <field name="actual_end_date"/>
-                                <field name="progress"/>
+                                <field name="progress" readonly="1" widget="progressbar"/>
                                 <field name="status"
                                     decoration-muted="status == 'not_started'"
                                     decoration-warning="status == 'in_progress'"
@@ -85,13 +93,46 @@
                                     <field name="projects_id" newline="1"/>
                                     <field name="projects_name"/>
                                     <field name="manager_name"/>
+                                    <field name="owner_id"/>
                                     <field name="phuong_phap_quan_ly"/>
                                     <field name="description"/>
                                     <field name="start_date"/>
                                     <field name="actual_end_date"/>
-                                    <field name="progress"/>
+                                    <field name="progress" readonly="1" widget="progressbar"/>
                                     <field name="status" newline="1"/>
                                 </group>
+                            </page>
+                            <page string="Vai trò dự án">
+                                <field name="team_role_ids" context="{'default_project_id': active_id}">
+                                    <tree editable="bottom" decoration-success="state == 'active'" decoration-muted="state == 'done'" decoration-info="state == 'planned'">
+                                        <field name="employee_id"/>
+                                        <field name="role_code"/>
+                                        <field name="responsibility"/>
+                                        <field name="allocation_percent" widget="progressbar"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="is_main_role"/>
+                                        <field name="state"/>
+                                    </tree>
+                                    <form>
+                                        <group col="2">
+                                            <group string="Nhân sự &amp; vai trò">
+                                                <field name="employee_id"/>
+                                                <field name="role_code"/>
+                                                <field name="is_main_role"/>
+                                            </group>
+                                            <group string="Tham gia">
+                                                <field name="allocation_percent"/>
+                                                <field name="start_date"/>
+                                                <field name="end_date"/>
+                                                <field name="state"/>
+                                            </group>
+                                        </group>
+                                        <group string="Trách nhiệm">
+                                            <field name="responsibility" nolabel="1"/>
+                                        </group>
+                                    </form>
+                                </field>
                             </page>
                             <page string="Công việc dự án">
                                 <field name="task_ids">
@@ -102,10 +143,14 @@
                                         <field name="nhan_vien_phan_cong_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': False}"/>
                                         <field name="ngay_bat_dau"/>
                                         <field name="ngay_ket_thuc"/>
-                                        <field name="muc_do_uu_tien"/>
-                                        <field name="ti_le_hoan_thanh"/>
+                                        <field name="muc_do_uu_tien" widget="badge"
+                                            decoration-muted="muc_do_uu_tien == 'thap'"
+                                            decoration-info="muc_do_uu_tien == 'trung_binh'"
+                                            decoration-warning="muc_do_uu_tien == 'cao'"
+                                            decoration-danger="muc_do_uu_tien == 'khan_cap'"/>
+                                        <field name="ti_le_hoan_thanh" widget="progressbar"/>
                                         <field name="chi_phi_nhan_su_thuc_te" readonly="1"/>
-                                        <field name="trang_thai"
+                                        <field name="trang_thai" widget="badge"
                                             decoration-muted="trang_thai == 'moi'"
                                             decoration-warning="trang_thai == 'dang_thuc_hien'"
                                             decoration-success="trang_thai == 'hoan_thanh'"
@@ -203,10 +248,11 @@
                     <field name="projects_id"/>
                     <field name="projects_name"/>
                     <field name="manager_name"/>
+                    <field name="owner_id"/>
                     <field name="phuong_phap_quan_ly"/>
                     <field name="start_date"/>
                     <field name="actual_end_date"/>
-                    <field name="progress"/>
+                    <field name="progress" readonly="1" widget="progressbar"/>
                     <field name="tong_chi_phi_du_an"/>
                     <field name="status"
                         decoration-muted="status == 'not_started'"
@@ -234,6 +280,7 @@
                     <field name="projects_id"/>
                     <field name="projects_name"/>
                     <field name="manager_name"/>
+                    <field name="owner_id"/>
                     <field name="start_date"/>
                     <field name="actual_end_date"/>
                     <field name="progress"/>
@@ -248,6 +295,7 @@
                     <group expand="0" string="Nhóm theo">
                         <filter name="group_approval_state" string="Trạng thái duyệt" context="{'group_by': 'approval_state'}"/>
                         <filter name="group_status" string="Trạng thái" context="{'group_by': 'status'}"/>
+                        <filter name="group_owner" string="Chủ dự án" context="{'group_by': 'owner_id'}"/>
                     </group>
                 </search>
             </field>

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
                     <!-- Tab "Dự án tham gia" - chỉ hiển thị khi module project_management được cài đặt -->
-                    <page string="Dự án tham gia" 
+                    <page string="Dự án tham gia"
                           attrs="{'invisible': [('has_project_management', '=', False)]}">
                         <field name="has_project_management" invisible="1"/>
                         <field name="du_an_tham_gia_ids" 
@@ -28,6 +28,39 @@
                                 <field name="start_date"/>
                                 <field name="actual_end_date"/>
                             </tree>
+                        </field>
+                    </page>
+                    <page string="Vai trò dự án"
+                          attrs="{'invisible': [('has_project_management', '=', False)]}">
+                        <field name="project_role_ids" context="{'default_employee_id': active_id}">
+                            <tree editable="bottom" decoration-success="state == 'active'" decoration-muted="state == 'done'" decoration-info="state == 'planned'">
+                                <field name="project_id"/>
+                                <field name="role_code"/>
+                                <field name="responsibility"/>
+                                <field name="allocation_percent" widget="progressbar"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="is_main_role"/>
+                                <field name="state"/>
+                            </tree>
+                            <form>
+                                <group col="2">
+                                    <group string="Dự án &amp; vai trò">
+                                        <field name="project_id"/>
+                                        <field name="role_code"/>
+                                        <field name="is_main_role"/>
+                                    </group>
+                                    <group string="Tham gia">
+                                        <field name="allocation_percent"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="state"/>
+                                    </group>
+                                </group>
+                                <group string="Trách nhiệm">
+                                    <field name="responsibility" nolabel="1"/>
+                                </group>
+                            </form>
                         </field>
                     </page>
                 </xpath>

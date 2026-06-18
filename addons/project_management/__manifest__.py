@@ -41,6 +41,7 @@
         'views/expenses.xml',
         'views/labor_cost_views.xml',
         'views/project_governance_views.xml',
+        'views/project_team_views.xml',
         'views/chart.xml',
         'views/chartoftasks.xml',
         'views/cong_viec_extend.xml',

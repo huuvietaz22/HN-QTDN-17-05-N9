@@ -30,6 +30,7 @@
         'data/sequence_data.xml',
         # Views
         'views/chuc_vu.xml',
+        'views/chuyen_mon.xml',
         'views/phong_ban.xml',
         'views/nhan_vien.xml',
         'views/lich_su_lam_viec.xml',

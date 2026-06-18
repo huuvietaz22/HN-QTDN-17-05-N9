@@ -60,6 +60,21 @@ class NhanVien(models.Model):
     # Liên kết Many2one - suffix _id
     chuc_vu_id = fields.Many2one('chuc_vu', string='Chức vụ', ondelete='set null')
     phong_ban_id = fields.Many2one('phong_ban', string='Phòng ban', ondelete='set null')
+    chuyen_mon_ids = fields.Many2many(
+        'chuyen_mon',
+        'nhan_vien_chuyen_mon_rel',
+        'nhan_vien_id',
+        'chuyen_mon_id',
+        string='Chuyên môn'
+    )
+    trinh_do_chuyen_mon = fields.Selection([
+        ('intern', 'Thực tập'),
+        ('junior', 'Junior'),
+        ('middle', 'Middle'),
+        ('senior', 'Senior'),
+        ('expert', 'Expert'),
+    ], string='Trình độ chuyên môn', default='junior')
+    nam_kinh_nghiem = fields.Float(string='Năm kinh nghiệm')
 
     # Liên kết One2many - suffix _ids
     lich_su_lam_viec_ids = fields.One2many(
@@ -86,11 +101,13 @@ class NhanVien(models.Model):
             vals['ma_nhan_vien'] = self.env['ir.sequence'].next_by_code('nhan_vien.sequence') or 'NV001'
         return super(NhanVien, self).create(vals)
 
-    @api.constrains('luong_co_ban', 'don_gia_gio')
+    @api.constrains('luong_co_ban', 'don_gia_gio', 'nam_kinh_nghiem')
     def _check_salary_values(self):
         for record in self:
             if record.luong_co_ban < 0 or record.don_gia_gio < 0:
                 raise ValidationError('Lương cơ bản và đơn giá giờ không được âm.')
+            if record.nam_kinh_nghiem < 0:
+                raise ValidationError('Năm kinh nghiệm không được âm.')
 
     def name_get(self):
         """Hiển thị mã và họ tên nhân viên"""

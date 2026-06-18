@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_chuyen_mon_tree" model="ir.ui.view">
+            <field name="name">chuyen_mon.tree</field>
+            <field name="model">chuyen_mon</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ma_chuyen_mon"/>
+                    <field name="ten_chuyen_mon"/>
+                    <field name="nhom_chuyen_mon"/>
+                    <field name="nhan_vien_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_chuyen_mon_form" model="ir.ui.view">
+            <field name="name">chuyen_mon.form</field>
+            <field name="model">chuyen_mon</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="ma_chuyen_mon" readonly="1"/></h1>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="ten_chuyen_mon"/>
+                                <field name="nhom_chuyen_mon"/>
+                            </group>
+                            <group>
+                                <field name="nhan_vien_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <group string="Mô tả">
+                            <field name="mo_ta" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_chuyen_mon_search" model="ir.ui.view">
+            <field name="name">chuyen_mon.search</field>
+            <field name="model">chuyen_mon</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ma_chuyen_mon"/>
+                    <field name="ten_chuyen_mon"/>
+                    <field name="nhom_chuyen_mon"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter name="group_nhom_chuyen_mon" string="Nhóm chuyên môn" context="{'group_by': 'nhom_chuyen_mon'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_chuyen_mon" model="ir.actions.act_window">
+            <field name="name">Chuyên môn</field>
+            <field name="res_model">chuyen_mon</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_chuyen_mon_search"/>
+        </record>
+    </data>
+</odoo>

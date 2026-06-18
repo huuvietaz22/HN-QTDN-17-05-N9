@@ -31,6 +31,19 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Chức vụ &amp; chuyên môn">
+                                <group col="2">
+                                    <group string="Tổ chức">
+                                        <field name="chuc_vu_id" options="{'no_create': True}"/>
+                                        <field name="phong_ban_id" options="{'no_create': True}"/>
+                                    </group>
+                                    <group string="Chuyên môn">
+                                        <field name="chuyen_mon_ids" widget="many2many_tags"/>
+                                        <field name="trinh_do_chuyen_mon"/>
+                                        <field name="nam_kinh_nghiem"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Chi phí nhân sự">
                                 <group col="2">
                                     <group string="Hợp đồng">
@@ -71,6 +84,8 @@
                     <field name="ho_ten"/>
                     <field name="chuc_vu_id"/>
                     <field name="phong_ban_id"/>
+                    <field name="chuyen_mon_ids" widget="many2many_tags"/>
+                    <field name="trinh_do_chuyen_mon"/>
                     <field name="loai_hop_dong"/>
                     <field name="don_gia_gio"/>
                     <field name="ngay_sinh"/>
@@ -161,6 +176,8 @@
                     <field name="ho_ten"/>
                     <field name="chuc_vu_id"/>
                     <field name="phong_ban_id"/>
+                    <field name="chuyen_mon_ids"/>
+                    <field name="trinh_do_chuyen_mon"/>
                     <field name="email"/>
                     <field name="so_dien_thoai"/>
                     <field name="loai_hop_dong"/>
@@ -169,6 +186,7 @@
                     <group expand="0" string="Nhóm theo">
                         <filter name="group_chuc_vu" string="Chức vụ" context="{'group_by': 'chuc_vu_id'}"/>
                         <filter name="group_phong_ban" string="Phòng ban" context="{'group_by': 'phong_ban_id'}"/>
+                        <filter name="group_trinh_do" string="Trình độ" context="{'group_by': 'trinh_do_chuyen_mon'}"/>
                     </group>
                 </search>
             </field>

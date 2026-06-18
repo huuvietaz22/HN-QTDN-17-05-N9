@@ -36,6 +36,44 @@
             <field name="ten_chuc_vu">Kiểm thử viên</field>
         </record>
 
+        <!-- Chuyên môn -->
+        <record id="sample_spec_project_management" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-PM</field>
+            <field name="ten_chuyen_mon">Quản lý dự án</field>
+            <field name="nhom_chuyen_mon">management</field>
+            <field name="mo_ta">Lập kế hoạch, điều phối nguồn lực, kiểm soát tiến độ và nghiệm thu dự án.</field>
+        </record>
+        <record id="sample_spec_business_analysis" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-BA</field>
+            <field name="ten_chuyen_mon">Phân tích nghiệp vụ</field>
+            <field name="nhom_chuyen_mon">business</field>
+            <field name="mo_ta">Khảo sát, phân tích quy trình, viết đặc tả yêu cầu và hỗ trợ nghiệm thu.</field>
+        </record>
+        <record id="sample_spec_odoo_dev" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-ODOO</field>
+            <field name="ten_chuyen_mon">Phát triển Odoo</field>
+            <field name="nhom_chuyen_mon">dev</field>
+            <field name="mo_ta">Thiết kế model, view, menu, workflow và báo cáo trên Odoo.</field>
+        </record>
+        <record id="sample_spec_backend" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-BE</field>
+            <field name="ten_chuyen_mon">Backend/API</field>
+            <field name="nhom_chuyen_mon">dev</field>
+            <field name="mo_ta">Xử lý nghiệp vụ phía máy chủ, tích hợp API và tối ưu dữ liệu.</field>
+        </record>
+        <record id="sample_spec_quality" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-QAQC</field>
+            <field name="ten_chuyen_mon">QA/QC</field>
+            <field name="nhom_chuyen_mon">qa_qc</field>
+            <field name="mo_ta">Lập kế hoạch kiểm thử, kiểm soát chất lượng và nghiệm thu nội bộ.</field>
+        </record>
+        <record id="sample_spec_coordination" model="chuyen_mon">
+            <field name="ma_chuyen_mon">CM-CO</field>
+            <field name="ten_chuyen_mon">Điều phối dự án</field>
+            <field name="nhom_chuyen_mon">operations</field>
+            <field name="mo_ta">Điều phối lịch họp, tài liệu, biên bản và thông tin giữa các bên.</field>
+        </record>
+
         <!-- Nhân viên -->
         <record id="sample_employee_pm" model="nhan_vien">
             <field name="ma_nhan_vien">NV-PM-001</field>
@@ -52,6 +90,9 @@
             <field name="don_gia_gio">180000</field>
             <field name="chuc_vu_id" ref="sample_position_pm"/>
             <field name="phong_ban_id" ref="sample_department_pm"/>
+            <field name="chuyen_mon_ids" eval="[(6, 0, [ref('sample_spec_project_management'), ref('sample_spec_coordination')])]"/>
+            <field name="trinh_do_chuyen_mon">senior</field>
+            <field name="nam_kinh_nghiem">7</field>
         </record>
         <record id="sample_employee_ba" model="nhan_vien">
             <field name="ma_nhan_vien">NV-BA-001</field>
@@ -68,6 +109,9 @@
             <field name="don_gia_gio">140000</field>
             <field name="chuc_vu_id" ref="sample_position_ba"/>
             <field name="phong_ban_id" ref="sample_department_pm"/>
+            <field name="chuyen_mon_ids" eval="[(6, 0, [ref('sample_spec_business_analysis'), ref('sample_spec_coordination')])]"/>
+            <field name="trinh_do_chuyen_mon">middle</field>
+            <field name="nam_kinh_nghiem">4</field>
         </record>
         <record id="sample_employee_dev1" model="nhan_vien">
             <field name="ma_nhan_vien">NV-DEV-001</field>
@@ -84,6 +128,9 @@
             <field name="don_gia_gio">150000</field>
             <field name="chuc_vu_id" ref="sample_position_dev"/>
             <field name="phong_ban_id" ref="sample_department_dev"/>
+            <field name="chuyen_mon_ids" eval="[(6, 0, [ref('sample_spec_odoo_dev'), ref('sample_spec_backend')])]"/>
+            <field name="trinh_do_chuyen_mon">senior</field>
+            <field name="nam_kinh_nghiem">5</field>
         </record>
         <record id="sample_employee_dev2" model="nhan_vien">
             <field name="ma_nhan_vien">NV-DEV-002</field>
@@ -100,6 +147,9 @@
             <field name="don_gia_gio">130000</field>
             <field name="chuc_vu_id" ref="sample_position_dev"/>
             <field name="phong_ban_id" ref="sample_department_dev"/>
+            <field name="chuyen_mon_ids" eval="[(6, 0, [ref('sample_spec_odoo_dev')])]"/>
+            <field name="trinh_do_chuyen_mon">middle</field>
+            <field name="nam_kinh_nghiem">3</field>
         </record>
         <record id="sample_employee_qa" model="nhan_vien">
             <field name="ma_nhan_vien">NV-QA-001</field>
@@ -116,6 +166,9 @@
             <field name="don_gia_gio">120000</field>
             <field name="chuc_vu_id" ref="sample_position_tester"/>
             <field name="phong_ban_id" ref="sample_department_qa"/>
+            <field name="chuyen_mon_ids" eval="[(6, 0, [ref('sample_spec_quality')])]"/>
+            <field name="trinh_do_chuyen_mon">middle</field>
+            <field name="nam_kinh_nghiem">4</field>
         </record>
 
         <!-- Dự án -->
@@ -124,6 +177,7 @@
             <field name="projects_name">Xây dựng hệ thống quản lý dự án và công việc</field>
             <field name="description">Dự án mẫu mô phỏng quy trình quản lý dự án, phân công công việc, theo dõi nhiệm vụ, ngân sách và chi phí.</field>
             <field name="manager_name" ref="sample_employee_pm"/>
+            <field name="owner_id" ref="sample_employee_pm"/>
             <field name="start_date">2026-06-01</field>
             <field name="actual_end_date">2026-08-31</field>
             <field name="phuong_phap_quan_ly">scrum</field>
@@ -137,11 +191,142 @@
             <field name="projects_name">Ứng dụng di động theo dõi tiến độ công việc</field>
             <field name="description">Dự án mẫu thứ hai dùng để thử biểu đồ, ngân sách và trạng thái dự án ở giai đoạn khởi tạo.</field>
             <field name="manager_name" ref="sample_employee_ba"/>
+            <field name="owner_id" ref="sample_employee_pm"/>
             <field name="start_date">2026-07-01</field>
             <field name="actual_end_date">2026-10-15</field>
             <field name="phuong_phap_quan_ly">kanban</field>
             <field name="status">not_started</field>
             <field name="approval_state">pending</field>
+        </record>
+        <function model="projects" name="_sync_owner_from_manager_for_existing_projects"/>
+
+        <!-- Phân vai nhân sự trong dự án -->
+        <record id="sample_role_internal_owner" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_pm"/>
+            <field name="role_code">owner</field>
+            <field name="responsibility">Chịu trách nhiệm mục tiêu, phạm vi, ngân sách và kết quả cuối cùng của dự án.</field>
+            <field name="allocation_percent">40</field>
+            <field name="start_date">2026-06-01</field>
+            <field name="end_date">2026-08-31</field>
+            <field name="is_main_role">1</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_pm" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_pm"/>
+            <field name="role_code">pm</field>
+            <field name="responsibility">Lập kế hoạch, điều phối sprint, báo cáo tiến độ và xử lý rủi ro.</field>
+            <field name="allocation_percent">80</field>
+            <field name="start_date">2026-06-01</field>
+            <field name="end_date">2026-08-31</field>
+            <field name="is_main_role">1</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_co" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_ba"/>
+            <field name="role_code">co</field>
+            <field name="responsibility">Điều phối họp, biên bản, tài liệu yêu cầu và kết nối stakeholder với team kỹ thuật.</field>
+            <field name="allocation_percent">30</field>
+            <field name="start_date">2026-06-01</field>
+            <field name="end_date">2026-08-31</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_ba" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_ba"/>
+            <field name="role_code">ba</field>
+            <field name="responsibility">Phân tích nghiệp vụ, viết đặc tả yêu cầu và hỗ trợ UAT.</field>
+            <field name="allocation_percent">60</field>
+            <field name="start_date">2026-06-01</field>
+            <field name="end_date">2026-07-15</field>
+            <field name="is_main_role">1</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_leader" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_dev1"/>
+            <field name="role_code">leader</field>
+            <field name="responsibility">Leader kỹ thuật, thiết kế giải pháp Odoo và review chất lượng code.</field>
+            <field name="allocation_percent">80</field>
+            <field name="start_date">2026-06-10</field>
+            <field name="end_date">2026-08-20</field>
+            <field name="is_main_role">1</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_dev1" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_dev1"/>
+            <field name="role_code">dev</field>
+            <field name="responsibility">Phát triển model, luồng nghiệp vụ và báo cáo Odoo.</field>
+            <field name="allocation_percent">80</field>
+            <field name="start_date">2026-06-19</field>
+            <field name="end_date">2026-08-15</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_dev2" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_dev2"/>
+            <field name="role_code">dev</field>
+            <field name="responsibility">Hoàn thiện giao diện, action, menu và hỗ trợ sửa lỗi sau kiểm thử.</field>
+            <field name="allocation_percent">70</field>
+            <field name="start_date">2026-06-19</field>
+            <field name="end_date">2026-08-15</field>
+            <field name="state">active</field>
+        </record>
+        <record id="sample_role_internal_qa" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_qa"/>
+            <field name="role_code">qa</field>
+            <field name="responsibility">Lập test plan, checklist nghiệm thu và kiểm tra quy trình nghiệp vụ.</field>
+            <field name="allocation_percent">60</field>
+            <field name="start_date">2026-07-10</field>
+            <field name="end_date">2026-08-20</field>
+            <field name="is_main_role">1</field>
+            <field name="state">planned</field>
+        </record>
+        <record id="sample_role_internal_qc" model="project.team.role">
+            <field name="project_id" ref="sample_project_internal_pm"/>
+            <field name="employee_id" ref="sample_employee_qa"/>
+            <field name="role_code">qc</field>
+            <field name="responsibility">Kiểm soát lỗi, xác nhận sửa lỗi và chuẩn bị biên bản nghiệm thu nội bộ.</field>
+            <field name="allocation_percent">40</field>
+            <field name="start_date">2026-07-21</field>
+            <field name="end_date">2026-08-20</field>
+            <field name="state">planned</field>
+        </record>
+        <record id="sample_role_mobile_owner" model="project.team.role">
+            <field name="project_id" ref="sample_project_mobile_app"/>
+            <field name="employee_id" ref="sample_employee_pm"/>
+            <field name="role_code">owner</field>
+            <field name="responsibility">Đại diện doanh nghiệp phê duyệt mục tiêu và ngân sách ứng dụng mobile.</field>
+            <field name="allocation_percent">25</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-10-15</field>
+            <field name="is_main_role">1</field>
+            <field name="state">planned</field>
+        </record>
+        <record id="sample_role_mobile_pm" model="project.team.role">
+            <field name="project_id" ref="sample_project_mobile_app"/>
+            <field name="employee_id" ref="sample_employee_ba"/>
+            <field name="role_code">pm</field>
+            <field name="responsibility">Quản lý kế hoạch giai đoạn khởi tạo và điều phối phân tích yêu cầu mobile.</field>
+            <field name="allocation_percent">50</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-10-15</field>
+            <field name="is_main_role">1</field>
+            <field name="state">planned</field>
+        </record>
+        <record id="sample_role_mobile_dev" model="project.team.role">
+            <field name="project_id" ref="sample_project_mobile_app"/>
+            <field name="employee_id" ref="sample_employee_dev1"/>
+            <field name="role_code">dev</field>
+            <field name="responsibility">Tư vấn kỹ thuật, ước lượng effort và chuẩn bị prototype tích hợp.</field>
+            <field name="allocation_percent">30</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-08-15</field>
+            <field name="state">planned</field>
         </record>
 
         <!-- Quản trị dự án: mốc nghiệm thu, thay đổi, họp -->

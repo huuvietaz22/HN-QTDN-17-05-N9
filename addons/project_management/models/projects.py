@@ -14,6 +14,12 @@ class Projects(models.Model):
     description = fields.Text("Mô tả dự án")
     
     manager_name = fields.Many2one('nhan_vien', string="Quản lý dự án", tracking=True)
+    owner_id = fields.Many2one(
+        'nhan_vien',
+        string='Chủ dự án',
+        tracking=True,
+        help='Người chịu trách nhiệm sở hữu mục tiêu, phạm vi và kết quả cuối cùng của dự án.'
+    )
 
     start_date = fields.Date("Ngày bắt đầu")
     actual_end_date = fields.Date("Ngày kết thúc dự kiến/thực tế")
@@ -33,9 +39,8 @@ class Projects(models.Model):
     progress = fields.Float(
         "Tiến độ (%)",
         compute='_compute_progress',
-        inverse='_inverse_progress',
         store=True,
-        help="Tiến độ dự án (0-100%). Có thể nhập tay, nhưng sẽ được tính lại khi danh sách công việc thay đổi."
+        help="Tiến độ dự án được tự động tính từ tỷ lệ hoàn thành của các công việc trong dự án."
     )
     status = fields.Selection(
         selection=[
@@ -59,6 +64,7 @@ class Projects(models.Model):
     milestone_ids = fields.One2many('project.milestone', 'project_id', string='Mốc nghiệm thu')
     change_request_ids = fields.One2many('project.change.request', 'project_id', string='Yêu cầu thay đổi')
     meeting_ids = fields.One2many('project.meeting', 'project_id', string='Biên bản họp')
+    team_role_ids = fields.One2many('project.team.role', 'project_id', string='Vai trò dự án')
     milestone_count = fields.Integer(string='Số mốc', compute='_compute_governance_counts')
     change_request_count = fields.Integer(string='Số yêu cầu thay đổi', compute='_compute_governance_counts')
     meeting_count = fields.Integer(string='Số cuộc họp', compute='_compute_governance_counts')
@@ -111,19 +117,6 @@ class Projects(models.Model):
                 project.status = 'in_progress'
             elif project.progress == 0 and not project.status:
                 project.status = 'not_started'
-
-    def _inverse_progress(self):
-        """Cho phép người dùng nhập/sửa trực tiếp tiến độ dự án trên form.
-
-        Giá trị người dùng nhập sẽ được lưu lại.
-        Khi danh sách công việc hoặc % hoàn thành công việc thay đổi,
-        hàm compute vẫn sẽ tính lại để đồng bộ theo công việc.
-        """
-        # Không cần xử lý gì thêm, Odoo sẽ tự ghi giá trị `progress`
-        # được người dùng nhập vào record.
-        for project in self:
-            project.progress = project.progress
-
 
     def name_get(self):
         result = []
@@ -186,6 +179,17 @@ class Projects(models.Model):
         return res
 
     @api.model
+    def _sync_owner_from_manager_for_existing_projects(self):
+        """Gán chủ dự án mặc định cho dữ liệu cũ khi nâng cấp module."""
+        projects_without_owner = self.search([
+            ('owner_id', '=', False),
+            ('manager_name', '!=', False),
+        ])
+        for project in projects_without_owner:
+            project.owner_id = project.manager_name
+        return True
+
+    @api.model
     def create(self, vals):
         """Tự động sinh mã dự án khi lưu và đồng bộ sequence"""
         if not vals.get('projects_id') or vals.get('projects_id') == 'New':
@@ -246,6 +250,8 @@ class Projects(models.Model):
         for record in self:
             if not record.manager_name:
                 raise UserError('Vui lòng chọn Quản lý dự án trước khi gửi xét duyệt!')
+            if not record.owner_id:
+                raise UserError('Vui lòng chọn Chủ dự án trước khi gửi xét duyệt!')
             if not record.projects_name:
                 raise UserError('Vui lòng nhập tên dự án trước khi gửi xét duyệt!')
             record.approval_state = 'pending'

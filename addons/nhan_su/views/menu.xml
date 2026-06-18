@@ -27,10 +27,17 @@
             action="action_chuc_vu"
         />
 
+        <menuitem name="Quản lý chuyên môn"
+            id="menu_chuyen_mon"
+            parent="menu_root"
+            sequence="4"
+            action="action_chuyen_mon"
+        />
+
         <menuitem name="Quản lý phòng ban" 
             id="menu_phong_ban" 
             parent="menu_root" 
-            sequence="4"
+            sequence="5"
             action="action_phong_ban"
         />
     </data>

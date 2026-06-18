@@ -23,6 +23,11 @@ class NhanVienExtend(models.Model):
         string='Dự án tham gia',
         help='Danh sách dự án mà nhân viên tham gia (nếu có module Project Management)'
     )
+    project_role_ids = fields.One2many(
+        'project.team.role',
+        'employee_id',
+        string='Vai trò trong dự án'
+    )
     
     @api.depends()
     def _compute_has_project_management(self):
